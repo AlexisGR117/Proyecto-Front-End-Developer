@@ -11,17 +11,17 @@ html, body {
 }
 
 #tablero {
-    border: solid 2px black;
+    border: solid 3px black;
     padding: 0;
-    height: 500px;
-    width: 500px;
+    height: 505px;
+    width: 505px;
     justify-self: center;
     display: grid;
-    grid-template: 20px 460px 20px / 20px 460px 20px;
+    grid-template: 20px 465px 20px / 20px 465px 20px;
 }
 
 #casillas {
-    border: solid 2px black;
+    border: double 5px black;
     width: 456px;
     height: 456px;
     display: grid;
@@ -62,7 +62,7 @@ html, body {
     justify-content: space-around;
     font-family: "Courier New", Courier, monospace;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .seleccion {
