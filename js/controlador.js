@@ -35,7 +35,7 @@ var controlador = {
     },
 
     getNumeroFichasJugadorUno: function() {
-        return modelo.jugadores[0].fichas.length;
+        return modelo.jugadores[0].fichas;
     },
 
     getNumeroMovimientosJugadorUno: function() {
@@ -44,7 +44,7 @@ var controlador = {
 
     getNumeroCapturasJugadorUno: function() {
         let tablero = this.getTablero();
-        return (tablero.length/2 - 1)  * (tablero.length/2) - modelo.jugadores[1].fichas.length;
+        return (tablero.length/2 - 1)  * (tablero.length/2) - modelo.jugadores[1].fichas;
     },
 
     getNombreJugadorDos: function() {
@@ -56,7 +56,7 @@ var controlador = {
     },
 
     getNumeroFichasJugadorDos: function() {
-        return modelo.jugadores[1].fichas.length;
+        return modelo.jugadores[1].fichas;
     },
 
     getNumeroMovimientosJugadorDos: function() {
@@ -65,7 +65,7 @@ var controlador = {
 
     getNumeroCapturasJugadorDos: function() {
         let tablero = this.getTablero();
-        return (tablero.length/2 - 1)  * (tablero.length/2) - modelo.jugadores[0].fichas.length;
+        return (tablero.length/2 - 1)  * (tablero.length/2) - modelo.jugadores[0].fichas;
     },
 
     getTurno: function() {
@@ -74,6 +74,10 @@ var controlador = {
 
     moverSeleccion: function(fila, columna) {
         modelo.moverSeleccion(fila, columna);
+    },
+
+    isBloqueado: function() {
+        return modelo.bloqueo;
     }
 }
 

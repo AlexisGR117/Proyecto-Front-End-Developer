@@ -8,8 +8,14 @@ var vistaTablero = {
         this.colocarCasillas();  
         this.render(); 
         this.casillas.click(function(evt) {
-            if (evt.target.className === 'ficha') vistaTablero.seleccionar(evt);
-            else if (evt.target.className === 'ficha transparente')  vistaTablero.mover(evt);
+            if ($(evt.target).hasClass('ficha')) {
+                let idCasilla = evt.target.parentNode.id.split('-');
+                if ($(evt.target).hasClass('transparente')) {
+                    vistaTablero.mover(+idCasilla[1], +idCasilla[3]);
+                } else {
+                    vistaTablero.seleccionar(+idCasilla[1], +idCasilla[3]);
+                }
+            } 
         });
     },
 
@@ -58,34 +64,38 @@ var vistaTablero = {
         $('.rango').append(numeros);
     },
     
-    seleccionar: function(evt) {
-        let idCasilla = evt.target.parentNode.id.split('-');
-        let fichaActual = controlador.seleccionarFicha(idCasilla[1], idCasilla[3]);
-        if(fichaActual === controlador.getFicha(idCasilla[1], idCasilla[3])){
+    seleccionar: function(fila, columna) {
+        let fichaActual = controlador.seleccionarFicha(fila, columna);
+        if(fichaActual === controlador.getFicha(fila, columna)){
             $(".transparente").remove();
             $(".seleccion").removeClass("seleccion");
-            fichaActual.movimientosPosibles().forEach(function(movimiento) {
-                $(`#fila-${movimiento[0]}-columna-${movimiento[1]}`).prepend( 
-                `<img class="ficha transparente" src="img/${fichaActual.getTipo()}${fichaActual.getColor()}Transparente.png">`);
-            });
-            $(evt.target).parent().addClass("seleccion");
+            if (controlador.isBloqueado()){
+                fichaActual.saltosPosibles().forEach(function(salto) {
+                    $(`#fila-${salto[0]}-columna-${salto[1]}`).prepend( 
+                    `<img class="ficha transparente" src="img/${fichaActual.getTipo()}${fichaActual.getColor()}Transparente.png">`);
+                });
+            } else {
+                fichaActual.movimientosPosibles().forEach(function(movimiento) {
+                    $(`#fila-${movimiento[0]}-columna-${movimiento[1]}`).prepend( 
+                    `<img class="ficha transparente" src="img/${fichaActual.getTipo()}${fichaActual.getColor()}Transparente.png">`);
+                });
+            }
+            $(`#fila-${fila}-columna-${columna}`).addClass("seleccion");
         }
     },
     
-    mover: function(evt) {
-        let idCasilla = evt.target.parentNode.id.split('-');
-        console.log("(" + idCasilla[1] + ", " + idCasilla[3] + ")")
-        let nuevaFila = idCasilla[1];
-        let nuevaColumna = idCasilla[3];
+    mover: function(fila, columna) {
+        console.log("(" + fila + ", " + columna + ")")
         let fichaActual = controlador.getFichaActual();
         let filaAnterior = fichaActual.fila;
         let columnaAnterior = fichaActual.columna;
         let casillaAnterior = $(`#fila-${filaAnterior}-columna-${columnaAnterior}`);
         casillaAnterior.removeClass("seleccion");
         $(".transparente").remove();
-        controlador.moverSeleccion(+nuevaFila, +nuevaColumna);
+        controlador.moverSeleccion(fila, columna);
         this.render();
         vistaInformacion.render();
+        if(controlador.isBloqueado()) this.seleccionar(fila, columna);
     }
 }
 
