@@ -1,8 +1,20 @@
 var controlador = {
     init: function() {
-        modelo.init(10);
+        vistaInicio.init();
+    },
+
+    crearJuego: function(nombreUno, colorUno, nombreDos, colorDos, tamanoLado) {
+        modelo = new Juego(nombreUno, colorUno, nombreDos, colorDos, tamanoLado);
         vistaTablero.init();
         vistaInformacion.init();
+    },
+
+    getNombreGanador: function() {
+        return modelo.jugadores[modelo.ganador].nombre;
+    },
+
+    rendirse: function() {
+        modelo.rendirse();
     },
 
     getTablero: function () {
@@ -78,6 +90,10 @@ var controlador = {
 
     isBloqueado: function() {
         return modelo.bloqueo;
+    },
+
+    hayGanador: function() {
+        return modelo.ganador !== null;
     }
 }
 

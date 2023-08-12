@@ -6,48 +6,76 @@
     <link rel="stylesheet" href="css/juego.css"/>
 </head>
 <body>
-    <div id="jugador-uno" class="jugador">
-        <div class="titulo">Jugador Norte</div>
-        <div>Nombre:</div>
-        <div id="nombre-uno" class="informacion"></div>
-        <div>Color:</div>
-        <div id="color-uno"  class="informacion"></div>
-        <div>Movimientos:</div>
-        <div id="movimientos-uno"  class="informacion"></div>
-        <div>Fichas:</div>
-        <div id="fichas-uno"  class="informacion"></div>
-        <div>Fichas capturadas:</div>
-        <div id="capturas-uno"  class="informacion"></div>
+    <div id="inicio">
+        <div class="nuevo-jugador">
+            <img src="img/DamaNegroG.png" alt="Ficha jugador norte" id="imagen-uno" class="ficha-inicio">
+            <div style="align-self: center; font-weight: bold;">Jugador Norte</div>
+            <label for="nuevo-nombre-uno">Nombre:</label>
+            <input type="text" id="nuevo-nombre-uno">
+            <label for="nuevo-color-uno">Color:</label>
+            <select name="color" class="colores" id="nuevo-color-uno"></select>
+        </div>
+        <div class="nuevo-jugador">
+            <img src="img/DamaBlancoG.png" alt="Ficha jugador sur" id="imagen-dos" class="ficha-inicio">
+            <div style="align-self: center; font-weight: bold;">Jugador Sur</div>
+            <label for="nuevo-nombre-dos">Nombre:</label>
+            <input type="text" id="nuevo-nombre-dos">
+            <label for="nuevo-color-dos">Color:</label>
+            <select name="color" class="colores" id="nuevo-color-dos"></select>
+        </div>
+        <label for="tamano-tablero" style="align-self: center;">Tamaño Tablero:</label>
+        <select name="tamano" id="tamano-tablero" style="align-self: center;">
+            <option value="6">6x6</option>
+            <option value="8">8x8</option>
+            <option value="10">10x10</option>
+            <option value="12">12x12</option>
+        </select>
+        <button style="grid-column: span 2" id="boton-jugar">Jugar</button>
     </div>
-    <div id="tablero">
-        <div></div>
-        <div class="coordenada archivo"></div>
-        <div></div>
-        <div class="coordenada rango"></div>
-        <div id="casillas"></div>
-        <div class="coordenada rango"></div>
-        <div></div>
-        <div class="coordenada archivo"></div>
-        <div></div>
-    </div>
-    <div id="jugador-dos" class="jugador">
-        <div class="titulo">Jugador Sur</div>
-        <div>Nombre:</div>
-        <div id="nombre-dos"  class="informacion"></div>
-        <div>Color:</div>
-        <div id="color-dos"  class="informacion"></div>
-        <div>Movimientos:</div>
-        <div id="movimientos-dos"  class="informacion"></div>
-        <div>Fichas:</div>
-        <div id="fichas-dos"  class="informacion"></div>
-        <div>Fichas capturadas:</div>
-        <div id="capturas-dos"  class="informacion"></div>
-    </div>
-    <div></div>
-    <div id="informacion-juego">
-        <div class="titulo">Información</div>
-        <div>Turno:</div>
-        <div id="turno"  class="informacion"></div>
+    <div id="juego" class="oculto">
+        <div id="jugador-uno" class="jugador">
+            <div class="titulo">Jugador Norte</div>
+            <div>Nombre:</div>
+            <div id="nombre-uno" class="informacion"></div>
+            <div>Color:</div>
+            <div id="color-uno" class="informacion"></div>
+            <div>Movimientos:</div>
+            <div id="movimientos-uno" class="informacion"></div>
+            <div>Fichas:</div>
+            <div id="fichas-uno" class="informacion"></div>
+            <div>Fichas capturadas:</div>
+            <div id="capturas-uno" class="informacion"></div>
+        </div>
+        <div id="tablero">
+            <div></div>
+            <div class="coordenada archivo"></div>
+            <div></div>
+            <div class="coordenada rango"></div>
+            <div id="casillas"></div>
+            <div class="coordenada rango"></div>
+            <div></div>
+            <div class="coordenada archivo"></div>
+            <div></div>
+        </div>
+        <div id="jugador-dos" class="jugador">
+            <div class="titulo">Jugador Sur</div>
+            <div>Nombre:</div>
+            <div id="nombre-dos" class="informacion"></div>
+            <div>Color:</div>
+            <div id="color-dos" class="informacion"></div>
+            <div>Movimientos:</div>
+            <div id="movimientos-dos" class="informacion"></div>
+            <div>Fichas:</div>
+            <div id="fichas-dos" class="informacion"></div>
+            <div>Fichas capturadas:</div>
+            <div id="capturas-dos" class="informacion"></div>
+        </div>
+        <div id="informacion-juego">
+            <div class="titulo">Información</div>
+            <div class="informacion">Turno:</div>
+            <div id="turno" class="informacion"></div>
+            <button id="boton-rendirse">Rendirse</button>
+        </div>
     </div>
     <script src="js/modelo.js"></script>
     <script src="js/vista.js"></script>

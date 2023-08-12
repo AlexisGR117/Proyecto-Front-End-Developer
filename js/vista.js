@@ -1,12 +1,46 @@
+const COLORES = ["Blanco", "Negro", "Rojo"];
+
+var vistaInicio = {
+    init: function() {
+        const seleccionColores = $('.colores');
+        COLORES.forEach(function(color) {
+            const opcion = $('<option>', {
+                value: color,
+                text: color
+            });
+            seleccionColores.append(opcion);
+        });
+        $('#nuevo-color-uno').val("Negro");
+        $('#nuevo-color-uno').change(function() {
+            $('#imagen-uno').attr("src", `img/Dama${$(this).val()}G.png`);
+        });
+        $('#nuevo-color-dos').change(function() {
+            $('#imagen-dos').attr("src", `img/Dama${$(this).val()}G.png`);
+        });
+        $('#boton-jugar').click(function() {
+            const nombreUno = $('#nuevo-nombre-uno').val();
+            const colorUno = $('#nuevo-color-uno').val();
+            const nombreDos = $('#nuevo-nombre-dos').val();
+            const colorDos = $('#nuevo-color-dos').val();
+            const tamanoTablero = $('#tamano-tablero').val();
+            controlador.crearJuego(nombreUno, colorUno, nombreDos, colorDos, +tamanoTablero);
+            $('#inicio').addClass("oculto");
+            $('#juego').removeClass("oculto");
+        });
+    }
+}
+
 var vistaTablero = {
 
     init: function() {
         this.casillas = $('#casillas');
+        this.casillas.empty();
         let tamanoTablero = controlador.getTablero().length;
         this.casillas.css("gridTemplateRows", `repeat(${tamanoTablero}, ${100 / tamanoTablero}%)`);
         this.casillas.css("gridTemplateColumns", `repeat(${tamanoTablero}, ${100 / tamanoTablero}%)`);
         this.colocarCasillas();  
         this.render(); 
+        this.casillas.off();
         this.casillas.click(function(evt) {
             if ($(evt.target).hasClass('ficha')) {
                 let idCasilla = evt.target.parentNode.id.split('-');
@@ -44,6 +78,8 @@ var vistaTablero = {
     },
 
     colocarCasillas: function() {
+        $('.archivo').empty();
+        $('.rango').empty();
         let letras = "";
         let numeros = "";
         let tamanoTablero = controlador.getTamanoTablero();
@@ -76,7 +112,7 @@ var vistaTablero = {
                 });
             } else {
                 fichaActual.movimientosPosibles().forEach(function(movimiento) {
-                    $(`#fila-${movimiento[0]}-columna-${movimiento[1]}`).prepend( 
+                    $(`#fila-${movimiento[0]}-columna-${movimiento[1]}`).append( 
                     `<img class="ficha transparente" src="img/${fichaActual.getTipo()}${fichaActual.getColor()}Transparente.png">`);
                 });
             }
@@ -96,6 +132,11 @@ var vistaTablero = {
         this.render();
         vistaInformacion.render();
         if(controlador.isBloqueado()) this.seleccionar(fila, columna);
+        if(controlador.hayGanador()) {
+            alert("Felicidades ha ganado " + controlador.getNombreGanador());
+            $('#inicio').removeClass("oculto");
+            $('#juego').addClass("oculto");
+        }
     }
 }
 
@@ -114,6 +155,16 @@ var vistaInformacion = {
         this.capturasDos = $("#capturas-dos")
         this.turno = $("#turno")
         this.render();
+        $('#boton-rendirse').off();
+        $('#boton-rendirse').click(function() {
+            const opcion = confirm(controlador.getTurno() + ", ¿Seguro que te quieres rendir?");
+            if (opcion === true) {
+                controlador.rendirse();
+                alert("Felicidades ha ganado " + controlador.getNombreGanador());
+                $('#inicio').removeClass("oculto");
+                $('#juego').addClass("oculto");
+            }
+        });
     },
 
     render: function() {
