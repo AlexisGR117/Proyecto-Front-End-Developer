@@ -130,7 +130,6 @@ var vistaTablero = {
         $(".transparente").remove();
         controlador.moverSeleccion(fila, columna);
         this.render();
-        vistaInformacion.render();
         if(controlador.isBloqueado()) this.seleccionar(fila, columna);
         if(controlador.hayGanador()) {
             alert("Felicidades ha ganado " + controlador.getNombreGanador());
@@ -143,18 +142,6 @@ var vistaTablero = {
 var vistaInformacion = {
 
     init: function() {
-        $("#nombre-uno").text(controlador.getNombreJugadorUno());
-        $("#color-uno").text(controlador.getColorJugadorUno());
-        $("#nombre-dos").text(controlador.getNombreJugadorDos());
-        $("#color-dos").text(controlador.getColorJugadorDos());
-        this.movimientosUno = $("#movimientos-uno")
-        this.fichasUno = $("#fichas-uno")
-        this.capturasUno = $("#capturas-uno")
-        this.movimientosDos = $("#movimientos-dos")
-        this.fichasDos = $("#fichas-dos")
-        this.capturasDos = $("#capturas-dos")
-        this.turno = $("#turno")
-        this.render();
         $('#boton-rendirse').off();
         $('#boton-rendirse').click(function() {
             const opcion = confirm(controlador.getTurno() + ", ¿Seguro que te quieres rendir?");
@@ -167,15 +154,6 @@ var vistaInformacion = {
         });
     },
 
-    render: function() {
-        this.movimientosUno.text(controlador.getNumeroMovimientosJugadorUno());
-        this.fichasUno.text(controlador.getNumeroFichasJugadorUno());
-        this.capturasUno.text(controlador.getNumeroCapturasJugadorUno());
-        this.movimientosDos.text(controlador.getNumeroMovimientosJugadorDos());
-        this.fichasDos.text(controlador.getNumeroFichasJugadorDos());
-        this.capturasDos.text(controlador.getNumeroCapturasJugadorDos());
-        this.turno.text(controlador.getTurno());
-    }
 }
 
 

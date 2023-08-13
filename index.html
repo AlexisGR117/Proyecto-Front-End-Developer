@@ -4,6 +4,7 @@
     <title>Juego</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <link rel="stylesheet" href="css/juego.css"/>
+    <script src="lib/knockout-3.5.1.js"></script>
 </head>
 <body>
     <div id="inicio">
@@ -33,18 +34,18 @@
         <button style="grid-column: span 2" id="boton-jugar">Jugar</button>
     </div>
     <div id="juego" class="oculto">
-        <div id="jugador-uno" class="jugador">
+        <div id="jugador-uno" class="jugador" data-bind="with: jugadores[0]">
             <div class="titulo">Jugador Norte</div>
             <div>Nombre:</div>
-            <div id="nombre-uno" class="informacion"></div>
+            <div data-bind="text: nombre" id="nombre-uno" class="informacion"></div>
             <div>Color:</div>
-            <div id="color-uno" class="informacion"></div>
+            <div data-bind="text: color"  id="color-uno" class="informacion"></div>
             <div>Movimientos:</div>
-            <div id="movimientos-uno" class="informacion"></div>
+            <div data-bind="text: movimientos" id="movimientos-uno" class="informacion"></div>
             <div>Fichas:</div>
-            <div id="fichas-uno" class="informacion"></div>
+            <div data-bind="text: fichas"  id="fichas-uno" class="informacion"></div>
             <div>Fichas capturadas:</div>
-            <div id="capturas-uno" class="informacion"></div>
+            <div data-bind="text: fichasCapturadas" id="capturas-uno" class="informacion"></div>
         </div>
         <div id="tablero">
             <div></div>
@@ -57,23 +58,23 @@
             <div class="coordenada archivo"></div>
             <div></div>
         </div>
-        <div id="jugador-dos" class="jugador">
+        <div id="jugador-dos" class="jugador" data-bind="with: jugadores[1]">
             <div class="titulo">Jugador Sur</div>
             <div>Nombre:</div>
-            <div id="nombre-dos" class="informacion"></div>
+            <div data-bind="text: nombre" id="nombre-dos" class="informacion"></div>
             <div>Color:</div>
-            <div id="color-dos" class="informacion"></div>
+            <div data-bind="text: color"  id="color-dos" class="informacion"></div>
             <div>Movimientos:</div>
-            <div id="movimientos-dos" class="informacion"></div>
+            <div data-bind="text: movimientos" id="movimientos-dos" class="informacion"></div>
             <div>Fichas:</div>
-            <div id="fichas-dos" class="informacion"></div>
+            <div data-bind="text: fichas"  id="fichas-dos" class="informacion"></div>
             <div>Fichas capturadas:</div>
-            <div id="capturas-dos" class="informacion"></div>
+            <div data-bind="text: fichasCapturadas" id="capturas-dos" class="informacion"></div>
         </div>
         <div id="informacion-juego">
             <div class="titulo">Información</div>
             <div class="informacion">Turno:</div>
-            <div id="turno" class="informacion"></div>
+            <div data-bind="text: jugadores[turno()].nombre" id="turno" class="informacion"></div>
             <button id="boton-rendirse">Rendirse</button>
         </div>
     </div>

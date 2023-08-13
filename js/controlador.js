@@ -5,6 +5,7 @@ var controlador = {
 
     crearJuego: function(nombreUno, colorUno, nombreDos, colorDos, tamanoLado) {
         modelo = new Juego(nombreUno, colorUno, nombreDos, colorDos, tamanoLado);
+        ko.applyBindings(modelo);
         vistaTablero.init();
         vistaInformacion.init();
     },

@@ -33,7 +33,7 @@ class Peon extends Ficha {
      */
     saltosPosibles() {
         const saltos = [];
-        const diferenciaFila = this.getLado() === "Sur" ? -1 : 1;
+        const diferenciaFila = this.getLado() === 1 ? -1 : 1;
         const filaOponente = this.fila + diferenciaFila;
         const nuevaFila = this.fila + diferenciaFila * 2;
         const direcciones = [-1, 1];
@@ -56,7 +56,7 @@ class Peon extends Ficha {
      */
     movimientosPosibles() {
         const movimientos = [];
-        const diferenciaFila = this.getLado() === "Sur" ? -1 : 1;
+        const diferenciaFila = this.getLado() === 1 ? -1 : 1;
         const nuevaFila = this.fila + diferenciaFila;
         const direcciones = [-1, 1];
         for (const diferenciaColumna of direcciones) {
@@ -116,53 +116,59 @@ class Dama extends Ficha {
 
 }
 
+class Jugador {
+    constructor(color, nombre, lado, juego) {
+        this.color = color;
+        this.nombre = nombre;
+        this.lado = lado;
+        this.juego = juego;
+        this.fichas = ko.observable((this.juego.tamano/2 - 1) * (this.juego.tamano/2));
+        this.movimientos = ko.observable(0);
+    } 
+}
+
 class Juego {
 
     static TAMANOS_VALIDOS = [6, 8, 10, 12];
 
-    constructor(nombreUno, colorUno, nombreDos, colorDos, tamanoLado) {
+    constructor(nombreUno, colorUno, nombreDos, colorDos, tamano) {
         if (nombreUno.length < 3) throw new JuegoException(JuegoException.SHORT_NAME);
         if (nombreUno === nombreDos) throw new JuegoException(JuegoException.SAME_NAMES);
         if (colorUno === colorDos) throw new JuegoException(JuegoException.SAME_COLORS);
         if (nombreDos.length < 3) throw new JuegoException(JuegoException.SHORT_NAME);
-        if (!Juego.TAMANOS_VALIDOS.includes(tamanoLado)) throw new JuegoException(JuegoException.INVALID_SIZE);
-        this.crearJugadores(nombreUno, colorUno, nombreDos, colorDos, tamanoLado);
+        if (!Juego.TAMANOS_VALIDOS.includes(tamano)) throw new JuegoException(JuegoException.INVALID_SIZE);
+        this.tamano = tamano;
+        this.crearJugadores(nombreUno, colorUno, nombreDos, colorDos);
         this.tablero = [],
-        this.crearTablero(tamanoLado);
-        this.turno = 1,
+        this.crearTablero();
+        this.turno = ko.observable(1),
         this.ganador = null,
         this.fichaActual = null,
         this.bloqueo = false;
     }
 
-    crearJugadores(nombreUno, colorUno, nombreDos, colorDos, tamanoLado) {
-        const numeroFichas = (tamanoLado/2 - 1) * (tamanoLado/2);
-        this.jugadores = [{
-            color: colorUno,
-            nombre: nombreUno,
-            lado: "Norte",
-            fichas: numeroFichas,
-            movimientos: 0,
-        },
-        {
-            color: colorDos,
-            nombre: nombreDos,
-            lado: "Sur",
-            fichas: numeroFichas,
-            movimientos: 0,
-        }];
+    crearJugadores(nombreUno, colorUno, nombreDos, colorDos) {
+        const jugadorUno = new Jugador(colorUno, nombreUno, 0, this);
+        const jugadorDos = new Jugador(colorDos, nombreDos, 1, this);
+        this.jugadores = [jugadorUno, jugadorDos];
+        this.jugadores[0].fichasCapturadas = ko.computed(function() {
+            return (this.tamano/2 - 1)  * (this.tamano/2) - jugadorDos.fichas();
+        }, this);
+        this.jugadores[1].fichasCapturadas = ko.computed(function() {
+            return (this.tamano/2 - 1)  * (this.tamano/2) - jugadorUno.fichas();
+        }, this);
     }
 
-    crearTablero(tamanoLado) {
-        for (let i = 0; i < tamanoLado; i++) {
+    crearTablero() {
+        for (let i = 0; i < this.tamano; i++) {
             const fila = [];
-            for (let j = 0; j < tamanoLado; j++) {
+            for (let j = 0; j < this.tamano; j++) {
                 let ficha = null;
                 if((i%2 == 0 && j%2 != 0) || (i%2 != 0 && j%2 == 0)) {
-                    if (i < tamanoLado/2 - 1) {
+                    if (i < this.tamano/2 - 1) {
                         ficha = new Peon(this.jugadores[0], i, j, this);
                     }
-                    else if (i > tamanoLado/2) {
+                    else if (i > this.tamano/2) {
                         ficha = new Peon(this.jugadores[1], i, j, this);
                     }
                 }
@@ -191,7 +197,7 @@ class Juego {
      * @returns {boolean} True si la posicion esta dentro del tablero, de lo contario, False.
      */
     isPosicionValida(fila, columna) {
-        return 0 <= fila && fila < this.tablero.length && 0 <= columna && columna < this.tablero.length;
+        return 0 <= fila && fila < this.tamano && 0 <= columna && columna < this.tamano;
     }
 
     isPosicionDisponible(fila, columna) {
@@ -203,9 +209,9 @@ class Juego {
     }
 
     imprimirTablero() {
-        for (let i = 0; i < this.tablero.length; i++) {
+        for (let i = 0; i < this.tamano; i++) {
             let fila = '['
-            for (let j = 0; j < this.tablero.length; j++){
+            for (let j = 0; j < this.tamano; j++){
                 if (this.tablero[i][j] === null 
                     || (this.tablero[i][j] !== null && this.tablero[i][j] === null)) fila += 'null, ';
                 else fila += this.tablero[i][j].constructor.name + this.tablero[i][j].jugador.color + ', ';
@@ -216,7 +222,7 @@ class Juego {
     }
 
     seleccionarFicha(fila, columna) {
-        if (this.tablero[fila][columna].jugador !== this.jugadores[this.turno] ) {
+        if (this.tablero[fila][columna].jugador !== this.jugadores[this.turno()] ) {
             throw new JuegoException(JuegoException.INVALID_PLAYER);
         }
         if (this.tablero[fila][columna] !== this.fichaActual && this.bloqueo) throw new JuegoException(JuegoException.ONE_TOKEN_PER_TURN); 
@@ -245,7 +251,7 @@ class Juego {
                 const columnaCaptura = columnaActual+i*direccionColumna;
                 const ficha = this.tablero[filaCaptura][columnaCaptura];
                 if (ficha != null) {
-                    ficha.jugador.fichas --;
+                    ficha.jugador.fichas(ficha.jugador.fichas() - 1);
                     this.tablero[filaCaptura][columnaCaptura] = null;
                     return true;
                 }
@@ -256,8 +262,8 @@ class Juego {
 
     isCambioDama(ficha) {
         return ficha instanceof Peon 
-                && ((ficha.getLado() === 'Norte' && ficha.fila === this.tablero.length - 1) 
-                || (ficha.getLado() === 'Sur' && ficha.fila === 0));
+                && ((ficha.getLado() === 0 && ficha.fila === this.tamano - 1) 
+                || (ficha.getLado() === 1 && ficha.fila === 0));
     }
 
     rendirse() {
@@ -269,7 +275,7 @@ class Juego {
         if (this.ganador !== null) throw new JuegoException(JuegoException.GAME_FINISHED); 
         const filaActual = this.fichaActual.fila;
         const columnaActual = this.fichaActual.columna;
-        const jugadorActual = this.jugadores[this.turno];
+        const jugadorActual = this.jugadores[this.turno()];
         const captura = this.capturarFichas(fila, columna);
         this.tablero[filaActual][columnaActual] = null;
         this.fichaActual.fila = fila;
@@ -279,15 +285,15 @@ class Juego {
         } else {
             this.tablero[fila][columna] = this.fichaActual;
         }
-        jugadorActual.movimientos ++;
+        jugadorActual.movimientos(jugadorActual.movimientos() + 1);
         if (captura && this.fichaActual.saltosPosibles().length > 0) {
             this.bloqueo = true;
         } else {
             if(this.bloqueo) this.bloqueo = false;
             this.fichaActual = null;
-            this.turno = this.turno === 0 ? 1 : 0;
-            if(this.jugadores[this.turno].fichas === 0) {
-                this.ganador = this.turno === 0 ? 1 : 0;
+            this.turno(this.turno() === 0 ? 1 : 0);
+            if(this.jugadores[this.turno()].fichas === 0) {
+                this.ganador = this.turno() === 0 ? 1 : 0;
             };
         }   
         this.imprimirTablero();
