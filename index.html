@@ -25,25 +25,21 @@
             <select name="color" class="colores" id="nuevo-color-dos"></select>
         </div>
         <label for="tamano-tablero" style="align-self: center;">Tamaño Tablero:</label>
-        <select name="tamano" id="tamano-tablero" style="align-self: center;">
-            <option value="6">6x6</option>
-            <option value="8">8x8</option>
-            <option value="10">10x10</option>
-            <option value="12">12x12</option>
-        </select>
+        <select name="tamano" id="tamano-tablero" style="align-self: center;"></select>
         <button style="grid-column: span 2" id="boton-jugar">Jugar</button>
     </div>
+    <div>
     <div id="juego" class="oculto">
-        <div id="jugador-uno" class="jugador" data-bind="with: jugadores[0]">
+        <div class="jugador" data-bind="with: jugadores[0]">
             <div class="titulo">Jugador Norte</div>
             <div>Nombre:</div>
-            <div data-bind="text: nombre" id="nombre-uno" class="informacion"></div>
+            <div data-bind="text: nombre" class="informacion"></div>
             <div>Color:</div>
-            <div data-bind="text: color"  id="color-uno" class="informacion"></div>
+            <div data-bind="text: color" class="informacion"></div>
             <div>Movimientos:</div>
-            <div data-bind="text: movimientos" id="movimientos-uno" class="informacion"></div>
+            <div data-bind="text: movimientos" class="informacion"></div>
             <div>Fichas:</div>
-            <div data-bind="text: fichas"  id="fichas-uno" class="informacion"></div>
+            <div data-bind="text: fichas" class="informacion"></div>
             <div>Fichas capturadas:</div>
             <div data-bind="text: fichasCapturadas" id="capturas-uno" class="informacion"></div>
         </div>
@@ -58,23 +54,23 @@
             <div class="coordenada archivo"></div>
             <div></div>
         </div>
-        <div id="jugador-dos" class="jugador" data-bind="with: jugadores[1]">
+        <div class="jugador" data-bind="with: jugadores[1]">
             <div class="titulo">Jugador Sur</div>
             <div>Nombre:</div>
-            <div data-bind="text: nombre" id="nombre-dos" class="informacion"></div>
+            <div data-bind="text: nombre" class="informacion"></div>
             <div>Color:</div>
-            <div data-bind="text: color"  id="color-dos" class="informacion"></div>
+            <div data-bind="text: color" class="informacion"></div>
             <div>Movimientos:</div>
-            <div data-bind="text: movimientos" id="movimientos-dos" class="informacion"></div>
+            <div data-bind="text: movimientos" class="informacion"></div>
             <div>Fichas:</div>
-            <div data-bind="text: fichas"  id="fichas-dos" class="informacion"></div>
+            <div data-bind="text: fichas" class="informacion"></div>
             <div>Fichas capturadas:</div>
-            <div data-bind="text: fichasCapturadas" id="capturas-dos" class="informacion"></div>
+            <div data-bind="text: fichasCapturadas" class="informacion"></div>
         </div>
         <div id="informacion-juego">
             <div class="titulo">Información</div>
             <div class="informacion">Turno:</div>
-            <div data-bind="text: jugadores[turno()].nombre" id="turno" class="informacion"></div>
+            <div data-bind="text: jugadores[turno()].nombre" class="informacion"></div>
             <button id="boton-rendirse">Rendirse</button>
         </div>
     </div>

@@ -2,13 +2,19 @@ const COLORES = ["Blanco", "Negro", "Rojo"];
 
 var vistaInicio = {
     init: function() {
-        const seleccionColores = $('.colores');
         COLORES.forEach(function(color) {
             const opcion = $('<option>', {
                 value: color,
                 text: color
             });
-            seleccionColores.append(opcion);
+            $('.colores').append(opcion);
+        });
+        Juego.TAMANOS_VALIDOS.forEach(function(tamano) {
+            const opcion = $('<option>', {
+                value: tamano,
+                text: `${tamano}x${tamano}`
+            });
+            $('#tamano-tablero').append(opcion);
         });
         $('#nuevo-color-uno').val("Negro");
         $('#nuevo-color-uno').change(function() {
@@ -23,9 +29,13 @@ var vistaInicio = {
             const nombreDos = $('#nuevo-nombre-dos').val();
             const colorDos = $('#nuevo-color-dos').val();
             const tamanoTablero = $('#tamano-tablero').val();
-            controlador.crearJuego(nombreUno, colorUno, nombreDos, colorDos, +tamanoTablero);
-            $('#inicio').addClass("oculto");
-            $('#juego').removeClass("oculto");
+            try {
+                controlador.crearJuego(nombreUno, colorUno, nombreDos, colorDos, +tamanoTablero);
+                $('#inicio').addClass("oculto");
+                $('#juego').removeClass("oculto");
+            } catch (e) {
+                alert(e.message);
+            }
         });
     }
 }
@@ -101,40 +111,47 @@ var vistaTablero = {
     },
     
     seleccionar: function(fila, columna) {
-        let fichaActual = controlador.seleccionarFicha(fila, columna);
-        if(fichaActual === controlador.getFicha(fila, columna)){
-            $(".transparente").remove();
-            $(".seleccion").removeClass("seleccion");
-            if (controlador.isBloqueado()){
-                fichaActual.saltosPosibles().forEach(function(salto) {
-                    $(`#fila-${salto[0]}-columna-${salto[1]}`).prepend( 
-                    `<img class="ficha transparente" src="img/${fichaActual.getTipo()}${fichaActual.getColor()}Transparente.png">`);
-                });
-            } else {
-                fichaActual.movimientosPosibles().forEach(function(movimiento) {
-                    $(`#fila-${movimiento[0]}-columna-${movimiento[1]}`).append( 
-                    `<img class="ficha transparente" src="img/${fichaActual.getTipo()}${fichaActual.getColor()}Transparente.png">`);
-                });
+        try {
+            let fichaActual = controlador.seleccionarFicha(fila, columna);
+            if(fichaActual === controlador.getFicha(fila, columna)){
+                $(".transparente").remove();
+                $(".seleccion").removeClass("seleccion");
+                if (controlador.isBloqueado()){
+                    fichaActual.saltosPosibles().forEach(function(salto) {
+                        $(`#fila-${salto[0]}-columna-${salto[1]}`).prepend( 
+                        `<img class="ficha transparente" src="img/${fichaActual.getTipo()}${fichaActual.getColor()}Transparente.png">`);
+                    });
+                } else {
+                    fichaActual.movimientosPosibles().forEach(function(movimiento) {
+                        $(`#fila-${movimiento[0]}-columna-${movimiento[1]}`).append( 
+                        `<img class="ficha transparente" src="img/${fichaActual.getTipo()}${fichaActual.getColor()}Transparente.png">`);
+                    });
+                }
+                $(`#fila-${fila}-columna-${columna}`).addClass("seleccion");
             }
-            $(`#fila-${fila}-columna-${columna}`).addClass("seleccion");
+        } catch (e) {
+            alert(e.message);
         }
     },
     
     mover: function(fila, columna) {
-        console.log("(" + fila + ", " + columna + ")")
-        let fichaActual = controlador.getFichaActual();
-        let filaAnterior = fichaActual.fila;
-        let columnaAnterior = fichaActual.columna;
-        let casillaAnterior = $(`#fila-${filaAnterior}-columna-${columnaAnterior}`);
-        casillaAnterior.removeClass("seleccion");
-        $(".transparente").remove();
-        controlador.moverSeleccion(fila, columna);
-        this.render();
-        if(controlador.isBloqueado()) this.seleccionar(fila, columna);
-        if(controlador.hayGanador()) {
-            alert("Felicidades ha ganado " + controlador.getNombreGanador());
-            $('#inicio').removeClass("oculto");
-            $('#juego').addClass("oculto");
+        try {
+            let fichaActual = controlador.getFichaActual();
+            let filaAnterior = fichaActual.fila;
+            let columnaAnterior = fichaActual.columna;
+            let casillaAnterior = $(`#fila-${filaAnterior}-columna-${columnaAnterior}`);
+            casillaAnterior.removeClass("seleccion");
+            $(".transparente").remove();
+            controlador.moverSeleccion(fila, columna);
+            this.render();
+            if(controlador.isBloqueado()) this.seleccionar(fila, columna);
+            if(controlador.hayGanador()) {
+                alert("Felicidades ha ganado " + controlador.getNombreGanador());
+                $('#inicio').removeClass("oculto");
+                $('#juego').addClass("oculto");
+            }
+        } catch (e) {
+            alert(e.message);
         }
     }
 }

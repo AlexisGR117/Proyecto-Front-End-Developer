@@ -171,6 +171,8 @@ class Juego {
                     else if (i > this.tamano/2) {
                         ficha = new Peon(this.jugadores[1], i, j, this);
                     }
+                } else {
+                    ficha = false;
                 }
                 fila.push(ficha)
             }
@@ -212,9 +214,9 @@ class Juego {
         for (let i = 0; i < this.tamano; i++) {
             let fila = '['
             for (let j = 0; j < this.tamano; j++){
-                if (this.tablero[i][j] === null 
-                    || (this.tablero[i][j] !== null && this.tablero[i][j] === null)) fila += 'null, ';
-                else fila += this.tablero[i][j].constructor.name + this.tablero[i][j].jugador.color + ', ';
+                if (this.tablero[i][j] === null) fila += 'null, ';
+                else if (this.tablero[i][j] === false) fila += 'false, ';
+                else fila += this.tablero[i][j].getTipo() + this.tablero[i][j].getColor() + ', ';
             }
             fila += ']'
             console.log(fila);
@@ -232,9 +234,6 @@ class Juego {
 
     isMovimientoPosible(fila, columna) {
         const movimientos =  this.bloqueo ? this.fichaActual.saltosPosibles() : this.fichaActual.movimientosPosibles();
-        for (let i = 0; i < movimientos.length; i++) {
-            console.log(movimientos[i][0] + ", " + movimientos[i][1]);
-        }
         return movimientos.some(arreglo => JSON.stringify(arreglo) === JSON.stringify([fila, columna]));
     }
 
@@ -295,9 +294,7 @@ class Juego {
             if(this.jugadores[this.turno()].fichas === 0) {
                 this.ganador = this.turno() === 0 ? 1 : 0;
             };
-        }   
-        this.imprimirTablero();
-        console.log();
+        }  
     }
 }
 

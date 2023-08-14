@@ -5,7 +5,8 @@ var controlador = {
 
     crearJuego: function(nombreUno, colorUno, nombreDos, colorDos, tamanoLado) {
         modelo = new Juego(nombreUno, colorUno, nombreDos, colorDos, tamanoLado);
-        ko.applyBindings(modelo);
+        ko.cleanNode(document.getElementById('juego'));
+        ko.applyBindings(modelo, document.getElementById('juego'));
         vistaTablero.init();
         vistaInformacion.init();
     },
@@ -23,11 +24,11 @@ var controlador = {
     },
 
     getTamanoTablero: function () {
-        return modelo.tablero.length;
+        return modelo.tamano;
     },
 
     getFicha: function(fila, columna) {
-        return modelo.tablero[fila][columna];
+        return modelo.getFicha(fila, columna);
     },
 
     getFichaActual: function() {
@@ -39,50 +40,8 @@ var controlador = {
         return modelo.fichaActual;
     },
 
-    getNombreJugadorUno: function() {
-        return modelo.jugadores[0].nombre;
-    },
-
-    getColorJugadorUno: function() {
-        return modelo.jugadores[0].color;
-    },
-
-    getNumeroFichasJugadorUno: function() {
-        return modelo.jugadores[0].fichas;
-    },
-
-    getNumeroMovimientosJugadorUno: function() {
-        return modelo.jugadores[0].movimientos;
-    },
-
-    getNumeroCapturasJugadorUno: function() {
-        let tablero = this.getTablero();
-        return (tablero.length/2 - 1)  * (tablero.length/2) - modelo.jugadores[1].fichas;
-    },
-
-    getNombreJugadorDos: function() {
-        return modelo.jugadores[1].nombre;
-    },
-
-    getColorJugadorDos: function() {
-        return modelo.jugadores[1].color;
-    },
-
-    getNumeroFichasJugadorDos: function() {
-        return modelo.jugadores[1].fichas;
-    },
-
-    getNumeroMovimientosJugadorDos: function() {
-        return modelo.jugadores[1].movimientos;
-    },
-
-    getNumeroCapturasJugadorDos: function() {
-        let tablero = this.getTablero();
-        return (tablero.length/2 - 1)  * (tablero.length/2) - modelo.jugadores[0].fichas;
-    },
-
     getTurno: function() {
-        return modelo.jugadores[modelo.turno].nombre;
+        return modelo.jugadores[modelo.turno()].nombre;
     },
 
     moverSeleccion: function(fila, columna) {
