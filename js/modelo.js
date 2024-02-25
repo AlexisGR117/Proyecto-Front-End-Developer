@@ -1,3 +1,6 @@
+/**
+ * Clase abstracta para representar una ficha en el juego.
+ */
 class Ficha {
 
     constructor(jugador, fila, columna, juego) {
@@ -7,29 +10,48 @@ class Ficha {
       this.juego = juego;
     }
 
+    /**
+     * Obtiene el lado de la ficha (0 o 1).
+     * @returns {number} El lado de la ficha.
+     */
     getLado() {
         return this.jugador.lado;
     }
 
+    /**
+     * Obtiene el color de la ficha (Blanco, Negro o Rojo).
+     * @returns {string} El color de la ficha.
+     */
     getColor() {
         return this.jugador.color;
     }
 
+    /**
+     * Obtiene el tipo de la ficha.
+     * @returns {string} El tipo de la ficha.
+     */
     getTipo() {
         return this.constructor.name;
     }
 
+    /**
+     * Comprueba si la ficha es del oponente.
+     * @param {Ficha} ficha - La ficha a comparar.
+     * @returns {boolean} True si la ficha es del oponente, false en caso contrario.
+     */
     isFichaOponente(ficha) {
         return ficha.getLado() !== this.getLado();
     }
   }
 
+/**
+ * Clase que representa un peón en el juego.
+ */
 class Peon extends Ficha {
 
     /**
-     * Da las posibles posiciones en las que la ficha puede capturar al moverse.
-     * 
-     * @returns {number[][]} Arreglo con los saltos posibles en arreglos donde en la posicion 0 está la final y en la 1 la columna.
+     * Devuelve las posibles posiciones en las que la ficha puede capturar al moverse.
+     * @returns {number[][]} Arreglo con los saltos posibles en arreglos donde en la posición 0 está la final y en la 1 la columna.
      */
     saltosPosibles() {
         const saltos = [];
@@ -50,9 +72,8 @@ class Peon extends Ficha {
     }
 
     /**
-     * Da las posibles posiciones a las que se puede mover la ficha en el tablero.
-     * 
-     * @returns {number[][]} Arreglo con los movimientos posibles en arreglos donde en la posicion 0 está la final y en la 1 la columna.
+     * Devuelve las posibles posiciones a las que se puede mover la ficha en el tablero.
+     * @returns {number[][]} Arreglo con los movimientos posibles en arreglos donde en la posición 0 está la final y en la 1 la columna.
      */
     movimientosPosibles() {
         const movimientos = [];
@@ -70,8 +91,15 @@ class Peon extends Ficha {
     }
 }
 
+/**
+ * Clase que representa una dama en el juego.
+ */
 class Dama extends Ficha {
 
+    /**
+     * Devuelve las posibles posiciones en las que la ficha puede capturar al moverse.
+     * @returns {number[][]} Arreglo con los saltos posibles en arreglos donde en la posición 0 está la final y en la 1 la columna.
+     */
     saltosPosibles() {
         const saltos = [];
         const direcciones  = [-1, 1];
@@ -96,6 +124,10 @@ class Dama extends Ficha {
         return saltos;
     }
     
+    /**
+     * Devuelve las posibles posiciones a las que se puede mover la ficha en el tablero.
+     * @returns {number[][]} Arreglo con los movimientos posibles en arreglos donde en la posición 0 está la final y en la 1 la columna.
+     */
     movimientosPosibles() {
         const movimientos = [];
         const direcciones  = [-1, 1];
@@ -116,6 +148,9 @@ class Dama extends Ficha {
 
 }
 
+/**
+ * Clase que representa un jugador en el juego.
+ */
 class Jugador {
     constructor(color, nombre, lado, juego) {
         this.color = color;
@@ -127,6 +162,9 @@ class Jugador {
     } 
 }
 
+/**
+ * Clase que representa el juego de damas.
+ */
 class Juego {
 
     static TAMANOS_VALIDOS = [6, 8, 10, 12];
@@ -147,6 +185,14 @@ class Juego {
         this.bloqueo = false;
     }
 
+
+    /**
+     * Crea dos jugadores con los nombres y colores dados.
+     * @param {string} nombreUno - El nombre del jugador 1.
+     * @param {string} colorUno - El color del jugador 1.
+     * @param {string} nombreDos - El nombre del jugador 2.
+     * @param {string} colorDos - El color del jugador 2. 
+     */
     crearJugadores(nombreUno, colorUno, nombreDos, colorDos) {
         const jugadorUno = new Jugador(colorUno, nombreUno, 0, this);
         const jugadorDos = new Jugador(colorDos, nombreDos, 1, this);
@@ -159,6 +205,9 @@ class Juego {
         }, this);
     }
 
+    /**
+     * Crea un tablero de damas vacío con el tamaño especificado.    
+     */
     crearTablero() {
         for (let i = 0; i < this.tamano; i++) {
             const fila = [];
@@ -181,11 +230,10 @@ class Juego {
     }
 
     /**
-     * Retorna la ficha de la casilla ubicada en la posicion dada.
-     * 
+     * Obtiene la ficha de la casilla ubicada en la posicion dada.
      * @param {number} fila - La fila de la casilla en la que esta la ficha.
      * @param {number} columna - La columna de la casilla en la que esta la ficha.
-     * @returns {boolean} La ficha que esta en la posicion dada.
+     * @returns {Ficha} La ficha que esta en la posicion dada.
      */
     getFicha(fila, columna) {
         return this.tablero[fila][columna];
@@ -193,23 +241,37 @@ class Juego {
 
     /**
      * Dice si una posicion dada esta dentro del tablero.
-     * 
      * @param {number} fila - La fila de la posicion que se quiere verificar.
      * @param {number} columna - La columna de la posicion que se quiere verificar.
-     * @returns {boolean} True si la posicion esta dentro del tablero, de lo contario, False.
+     * @returns {boolean} True si la posicion esta dentro del tablero, de lo contario, False. 
      */
     isPosicionValida(fila, columna) {
         return 0 <= fila && fila < this.tamano && 0 <= columna && columna < this.tamano;
     }
 
+    /**
+     * Dice si una casilla dada está disponible para ser ocupada por una ficha.
+     * @param {number} fila - La fila de la casilla que se quiere verificar.
+     * @param {number} columna - La columna de la casilla que se quiere verificar.
+     * @returns {boolean} True si la casilla está vacía, de lo contrario, False. 
+     */    
     isPosicionDisponible(fila, columna) {
         return this.isPosicionValida(fila, columna) && this.getFicha(fila, columna) === null;
     }
 
+    /**
+     * Dice si una casilla dada está ocupada por una ficha.
+     * @param {number} fila - La fila de la casilla que se quiere verificar.
+     * @param {number} columna - La columna de la casilla que se quiere verificar.
+     * @returns {boolean} True si la casilla está ocupada, de lo contrario, False. 
+     */
     isPosicionOcupada(fila, columna) {
         return this.isPosicionValida(fila, columna) && this.getFicha(fila, columna) !== null;
     }
 
+    /**
+     * Imprime el tablero del juego en la consola. 
+     */
     imprimirTablero() {
         for (let i = 0; i < this.tamano; i++) {
             let fila = '['
@@ -223,6 +285,14 @@ class Juego {
         }    
     }
 
+    /**
+     * Selecciona la ficha ubicada en la casilla dada.
+     * @param {number} fila - La fila de la casilla que contiene la ficha.
+     * @param {number} columna - La columna de la casilla que contiene la ficha.
+     * @throws {JuegoException} Si la ficha no pertenece al jugador actual, si ya se ha
+     * seleccionado una ficha y el jugador está obligado a comer otra, o si el juego
+     * ya ha terminado. 
+     */
     seleccionarFicha(fila, columna) {
         if (this.tablero[fila][columna].jugador !== this.jugadores[this.turno()] ) {
             throw new JuegoException(JuegoException.INVALID_PLAYER);
@@ -232,11 +302,23 @@ class Juego {
         this.fichaActual = this.tablero[fila][columna];
     }
 
+    /**
+     * Dice si la ficha actual puede moverse a la casilla dada.
+     * @param {number} fila - La fila de la casilla a la que se quiere mover la ficha.
+     * @param {number} columna - La columna de la casilla a la que se quiere mover la ficha.
+     * @returns {boolean} True si el movimiento es posible, de lo contrario, False. 
+     */
     isMovimientoPosible(fila, columna) {
         const movimientos =  this.bloqueo ? this.fichaActual.saltosPosibles() : this.fichaActual.movimientosPosibles();
         return movimientos.some(arreglo => JSON.stringify(arreglo) === JSON.stringify([fila, columna]));
     }
 
+    /**
+     * Captura las fichas enemigas que se encuentran entre la ficha actual y la casilla dada.
+     * @param {number} fila - La fila de la casilla a la que se quiere mover la ficha.
+     * @param {number} columna - La columna de la casilla a la que se quiere mover la ficha.
+     * @returns {boolean} True si se capturó alguna ficha, False de lo contrario. 
+     */
     capturarFichas(fila, columna) {
         const filaActual = this.fichaActual.fila;
         const columnaActual = this.fichaActual.columna;
@@ -259,16 +341,31 @@ class Juego {
         return false;
     }
 
+    /**
+     * Dice si la ficha dada puede convertirse en dama.
+     * @param {Ficha} ficha - La ficha que se quiere verificar.
+     * @returns {boolean} True si la ficha puede convertirse en dama, de lo contrario, False. 
+     */
     isCambioDama(ficha) {
         return ficha instanceof Peon 
                 && ((ficha.getLado() === 0 && ficha.fila === this.tamano - 1) 
                 || (ficha.getLado() === 1 && ficha.fila === 0));
     }
 
+    /**
+     * Declara al jugador actual como perdedor. 
+     */ 
     rendirse() {
         this.ganador = this.turno === 0 ? 1 : 0;
     }
 
+    /**
+     * Mueve la ficha seleccionada a la casilla dada.
+     * @param {number} fila - La fila de la casilla a la que se quiere mover la ficha.
+     * @param {number} columna - La columna de la casilla a la que se quiere mover la ficha.
+     * @throws {JuegoException} Si el movimiento no es posible, si el juego ya ha terminado,
+     * o si el jugador actual no tiene suficientes fichas. 
+     */
     moverSeleccion(fila, columna) {
         if (!this.isMovimientoPosible(fila, columna)) throw new JuegoException(JuegoException.INVALID_MOVEMENT); 
         if (this.ganador !== null) throw new JuegoException(JuegoException.GAME_FINISHED); 
@@ -298,6 +395,9 @@ class Juego {
     }
 }
 
+/**
+ * Clase que representa una excepción en el juego de damas.
+ */
 class JuegoException extends Error {
 
     constructor(message) {
